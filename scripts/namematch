@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cat num_gen_out.log > num_gen_out_${1}.log
+cat rtl_out.log > rtl_out_${1}.log

@@ -1,0 +1,67 @@
+module tasks_1;
+   
+   task SINGLE_WRITE;
+      input full;
+      
+      begin
+	 if (fifo_combo_tb.full == 'b0)
+	   begin
+	      @(posedge fifo_combo_tb.wr_clk_in)
+		begin
+		   fifo_combo_tb.wr <= 'b0;
+		   //fifo_combo_tb.d_in <= fifo_combo_tb.i;
+		end
+	      @(posedge fifo_combo_tb.wr_clk_in)
+		fifo_combo_tb.wr <= 'b1;
+	   end
+	 else
+	   begin
+	      fifo_combo_tb.wr <= 'b0;
+	   end
+      end
+   endtask // SINGLE_WRITE
+
+   task SINGLE_READ;
+      input empty;
+      
+      begin
+	 if (fifo_combo_tb.empty == 'b0)
+	   begin
+	      @(posedge fifo_combo_tb.rd_clk_in)
+		begin
+		   fifo_combo_tb.rd <= 'b0;
+		end
+	      @(posedge fifo_combo_tb.rd_clk_in)
+		fifo_combo_tb.rd <= 'b1;
+	   end
+	 else
+	   begin
+	      fifo_combo_tb.rd <= 'b0;
+	   end
+	   
+      end
+   endtask // SINGLE_READ
+
+   task CALC;
+      input [15:0] lfsr;
+      output [7:0] d_out;
+      output [15:0]    lfsr_out;
+      
+      reg [1:16]   interm;
+      reg [1:16]   lala;
+      
+      integer      i;
+      begin
+	 interm = lfsr;
+	 
+	 for(i = 0; i < 8; i = i+1)
+	   begin
+	      d_out[i] = interm[16];
+	      interm = {interm[4] ^ interm[13] ^ interm[15] ^ interm[16],interm[1:15]};
+	      
+	   end
+	 lfsr_out = interm;
+      end
+   endtask
+   
+endmodule
